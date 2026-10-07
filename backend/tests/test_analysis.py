@@ -160,6 +160,20 @@ class TestSecurityRules:
         names = [r["name"] for r in triggered]
         assert "Excessive Subdomains" in names
 
+    def test_scam_keywords_rule(self):
+        url = "http://free-software-crack.com/download/keygen"
+        features = extract_features(url)
+        triggered = get_triggered_rules(url, features)
+        names = [r["name"] for r in triggered]
+        assert "Scam / Illegal Activity Keywords" in names
+
+    def test_executable_extension_rule(self):
+        url = "http://malicious-site.com/setup.exe"
+        features = extract_features(url)
+        triggered = get_triggered_rules(url, features)
+        names = [r["name"] for r in triggered]
+        assert "Dangerous Executable File Download" in names
+
 
 # ============================================================
 # URL Validation Tests

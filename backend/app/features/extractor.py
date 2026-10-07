@@ -49,6 +49,18 @@ URL_SHORTENERS = {
     "short.link", "cutt.ly", "rb.gy", "tiny.cc",
 }
 
+SCAM_ILLEGAL_KEYWORDS = {
+    "crack", "keygen", "warez", "torrent", "mod-apk", "hack", "stealer",
+    "exploit", "airdrop", "crypto-claim", "free-crypto", "unlimited-coins",
+    "free-giftcard", "ransom", "darknet", "onion", "cheat", "nulled",
+    "free-money", "casino-bonus", "betting", "pirate", "leaked", "free-download",
+    "illegal", "darkweb", "carding", "dump"
+}
+
+EXECUTABLE_EXTENSIONS = {
+    ".exe", ".scr", ".bat", ".cmd", ".vbs", ".ps1", ".apk", ".iso", ".dmg", ".msi"
+}
+
 
 # ---------------------------------------------------------------------------
 # Helper utilities
@@ -116,6 +128,16 @@ def _count_auth_keywords(text: str) -> int:
 def _count_payment_keywords(text: str) -> int:
     text_lower = text.lower()
     return sum(1 for kw in PAYMENT_KEYWORDS if kw in text_lower)
+
+
+def _count_scam_keywords(text: str) -> int:
+    text_lower = text.lower()
+    return sum(1 for kw in SCAM_ILLEGAL_KEYWORDS if kw in text_lower)
+
+
+def _has_executable_ext(path: str) -> bool:
+    path_lower = path.lower()
+    return any(path_lower.endswith(ext) or f"{ext}?" in path_lower for ext in EXECUTABLE_EXTENSIONS)
 
 
 def _suspicious_tld(tld: str) -> bool:
@@ -202,6 +224,8 @@ def extract_features(url: str) -> Dict[str, Any]:
     features["is_url_shortener"] = 1 if _has_url_shortener(registered_dom) else 0
     features["num_auth_keywords"] = _count_auth_keywords(full_text)
     features["num_payment_keywords"] = _count_payment_keywords(full_text)
+    features["num_scam_keywords"] = _count_scam_keywords(full_text)
+    features["has_executable_ext"] = 1 if _has_executable_ext(path) else 0
     features["num_brand_tokens"] = _count_brand_tokens(full_text)
 
     # Domain-path token mismatch: brand in subdomain/path but not in registered domain

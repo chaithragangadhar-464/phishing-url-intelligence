@@ -195,12 +195,46 @@ def _rule_http_only(url: str, features: Dict) -> RuleResult:
     )
 
 
+def _rule_scam_keywords(url: str, features: Dict) -> RuleResult:
+    count = features.get("num_scam_keywords", 0)
+    triggered = count >= 1
+    severity = "HIGH" if count >= 2 else "MEDIUM"
+    return RuleResult(
+        name="Scam / Illegal Activity Keywords",
+        severity=severity,
+        description=f"URL contains {count} keyword(s) associated with illegal activity, scams, malware or piracy (e.g. 'crack', 'torrent', 'airdrop', 'stealer', 'hack').",
+        triggered=triggered,
+    )
+
+
+def _rule_executable_extension(url: str, features: Dict) -> RuleResult:
+    triggered = features.get("has_executable_ext", 0) == 1
+    return RuleResult(
+        name="Dangerous Executable File Download",
+        severity="HIGH",
+        description="URL targets an executable file extension (.exe, .apk, .bat, .vbs, .msi, .iso) — high risk of malware or trojan distribution.",
+        triggered=triggered,
+    )
+
+
+def _rule_unencrypted_http(url: str, features: Dict) -> RuleResult:
+    triggered = features.get("is_https", 0) == 0
+    return RuleResult(
+        name="Unencrypted HTTP Protocol",
+        severity="LOW",
+        description="URL uses plain HTTP without SSL/TLS encryption.",
+        triggered=triggered,
+    )
+
+
 # All rules in priority order
 ALL_RULES = [
     _rule_ip_hostname,
     _rule_at_sign,
     _rule_punycode,
     _rule_brand_impersonation,
+    _rule_executable_extension,
+    _rule_scam_keywords,
     _rule_http_only,
     _rule_suspicious_tld,
     _rule_excessive_subdomains,
@@ -208,6 +242,7 @@ ALL_RULES = [
     _rule_payment_keywords,
     _rule_url_shortener,
     _rule_non_standard_port,
+    _rule_unencrypted_http,
     _rule_excessive_length,
     _rule_high_entropy,
     _rule_encoded_chars,

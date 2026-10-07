@@ -39,8 +39,11 @@ def categorize_threats(features: Dict, triggered_rules: List[Dict]) -> List[str]
     if "Payment / Financial Keywords" in triggered_names and "HTTP (Unencrypted) with Sensitive Keywords" in triggered_names:
         categories.append("Payment Targeting")
 
-    if "URL Shortener Service" in triggered_names:
-        categories.append("Hidden Destination")
+    if "Dangerous Executable File Download" in triggered_names:
+        categories.append("Malware Distribution")
+
+    if "Scam / Illegal Activity Keywords" in triggered_names:
+        categories.append("Illegal Content / Scam")
 
     if features.get("num_brand_tokens", 0) > 0 and features.get("brand_impersonation_indicator", 0) == 1:
         if "Brand Impersonation" not in categories:
