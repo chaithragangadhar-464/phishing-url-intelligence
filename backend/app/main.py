@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from .api.routes import router
+from .api.mutate_routes import router as mutate_router
 from .models.loader import load_model, is_model_loaded
 
 logging.basicConfig(
@@ -53,6 +54,7 @@ app.add_middleware(
 
 # Include API routes
 app.include_router(router, prefix="/api")
+app.include_router(mutate_router, prefix="/api")
 
 
 @app.get("/health")
