@@ -1,0 +1,1 @@
+pip install -r requirements.txt && cd .. && python ml/training/train.py
