@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import Header from './components/Header'
 import URLInput from './components/URLInput'
 import AnalysisResult from './components/AnalysisResult'
+import MutationLab from './components/MutationLab'
 import LoadingState from './components/LoadingState'
 import ExampleURLs from './components/ExampleURLs'
 import Footer from './components/Footer'
@@ -90,7 +91,12 @@ function App() {
 
           {loading && <LoadingState />}
 
-          {result && !loading && <AnalysisResult result={result} />}
+          {result && !loading && (
+            <>
+              <AnalysisResult result={result} />
+              <MutationLab url={result.url} />
+            </>
+          )}
 
           {!result && !loading && (
             <ExampleURLs onExampleClick={handleExampleClick} />

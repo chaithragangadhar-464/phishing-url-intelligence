@@ -42,3 +42,27 @@ export async function checkHealth() {
     return false
   }
 }
+
+export async function mutateURL(url) {
+  const endpoint = `${API_BASE}/api/mutate`
+
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ url }),
+  })
+
+  if (!response.ok) {
+    let detail = `HTTP ${response.status}`
+    try {
+      const err = await response.json()
+      detail = err.detail || detail
+    } catch {}
+    throw new Error(detail)
+  }
+
+  const data = await response.json()
+  return data
+}
