@@ -40,6 +40,8 @@ ml/data/*.csv
 ml/data/*.zip
 *.pkl
 *.joblib
+!backend/models/*.joblib
+!models/*.joblib
 !models/.gitkeep
 
 # Node
