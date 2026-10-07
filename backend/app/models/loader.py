@@ -24,8 +24,11 @@ _PROJECT_ROOT = _BACKEND_ROOT.parent
 def _find_model_path(filename: str) -> Path:
     """Find model file in backend/models/ or project-root models/."""
     candidates = [
+        Path.cwd() / "models" / filename,
+        Path.cwd() / "backend" / "models" / filename,
         _BACKEND_ROOT / "models" / filename,
         _PROJECT_ROOT / "models" / filename,
+        Path("/app/models") / filename,
     ]
     for p in candidates:
         if p.exists():
