@@ -2,8 +2,8 @@
 
 > An AI-powered URL security analysis system that combines Machine Learning classification with deterministic cybersecurity heuristics to detect phishing URLs and explain exactly why they're suspicious.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20App-brightgreen)](https://phishing-url-intelligence.vercel.app)
-[![Backend API](https://img.shields.io/badge/Backend%20API-Render-blue)](https://phishing-url-intelligence-api.onrender.com)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20App-brightgreen)](https://chaithragangadhar-464.github.io/phishing-url-intelligence/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-black)](https://github.com/chaithragangadhar-464/phishing-url-intelligence)
 [![Python](https://img.shields.io/badge/Python-3.12-blue)](https://python.org)
 [![React](https://img.shields.io/badge/React-18-blue)](https://react.dev)
 [![XGBoost](https://img.shields.io/badge/Model-XGBoost-orange)](https://xgboost.readthedocs.io)
