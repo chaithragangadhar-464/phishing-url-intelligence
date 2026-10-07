@@ -194,7 +194,12 @@ def extract_features(url: str) -> Dict[str, Any]:
 
     # ---- Security-oriented features ----
     features["is_suspicious_tld"] = 1 if _suspicious_tld(ext.suffix or "") else 0
-    features["is_url_shortener"] = 1 if _has_url_shortener(ext.top_domain_under_public_suffix or "") else 0
+    registered_dom = (
+        getattr(ext, 'top_domain_under_public_suffix', None)
+        or getattr(ext, 'registered_domain', None)
+        or (f"{ext.domain}.{ext.suffix}" if ext.domain and ext.suffix else ext.domain or "")
+    )
+    features["is_url_shortener"] = 1 if _has_url_shortener(registered_dom) else 0
     features["num_auth_keywords"] = _count_auth_keywords(full_text)
     features["num_payment_keywords"] = _count_payment_keywords(full_text)
     features["num_brand_tokens"] = _count_brand_tokens(full_text)
