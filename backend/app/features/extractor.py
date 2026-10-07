@@ -50,11 +50,16 @@ URL_SHORTENERS = {
 }
 
 SCAM_ILLEGAL_KEYWORDS = {
+    # Software Piracy & Exploits
     "crack", "keygen", "warez", "torrent", "mod-apk", "hack", "stealer",
     "exploit", "airdrop", "crypto-claim", "free-crypto", "unlimited-coins",
     "free-giftcard", "ransom", "darknet", "onion", "cheat", "nulled",
     "free-money", "casino-bonus", "betting", "pirate", "leaked", "free-download",
-    "illegal", "darkweb", "carding", "dump"
+    "illegal", "darkweb", "carding", "dump",
+    # Crypto & Financial Scams
+    "bitcoin", "btc", "eth", "ethereum", "crypto", "claim", "free-bitcoin",
+    "giveaway", "doubler", "bonus", "reward", "jackpot", "lottery", "faucet",
+    "profit", "earnings", "investment-plan", "miner", "cloud-miner"
 }
 
 EXECUTABLE_EXTENSIONS = {

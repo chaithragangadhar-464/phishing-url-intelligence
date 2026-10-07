@@ -270,6 +270,6 @@ def compute_heuristic_score(triggered_rules: List[Dict]) -> float:
     Compute a 0-100 heuristic contribution score from triggered rules.
     HIGH rules contribute more weight.
     """
-    severity_weights = {"HIGH": 20, "MEDIUM": 10, "LOW": 5}
+    severity_weights = {"HIGH": 25, "MEDIUM": 15, "LOW": 5}
     score = sum(severity_weights.get(r["severity"], 5) for r in triggered_rules)
     return min(score, 100)

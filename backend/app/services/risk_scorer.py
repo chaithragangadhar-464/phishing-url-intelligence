@@ -84,13 +84,23 @@ def compute_risk_score(
     heuristic_contribution = (heuristic_score / 100) * 40  # 0–40
     raw_score = ml_contribution + heuristic_contribution
 
-    # Bonus adjustments for very high-severity indicators
+    # Bonus adjustments for high-severity indicators
     if features.get("is_ip_address", 0) == 1:
         raw_score = min(raw_score + 8, 100)
     if features.get("has_punycode", 0) == 1:
         raw_score = min(raw_score + 8, 100)
     if features.get("has_at_sign", 0) == 1:
         raw_score = min(raw_score + 5, 100)
+
+    # Scam and executable extension boosts
+    scam_count = features.get("num_scam_keywords", 0)
+    if scam_count >= 2:
+        raw_score = min(raw_score + 35, 100)
+    elif scam_count == 1:
+        raw_score = min(raw_score + 25, 100)
+
+    if features.get("has_executable_ext", 0) == 1:
+        raw_score = min(raw_score + 25, 100)
 
     return int(min(round(raw_score), 100))
 
