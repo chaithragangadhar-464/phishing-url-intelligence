@@ -91,6 +91,8 @@ def compute_risk_score(
         raw_score = min(raw_score + 8, 100)
     if features.get("has_at_sign", 0) == 1:
         raw_score = min(raw_score + 5, 100)
+    if features.get("brand_domain_mutation", 0) == 1:
+        raw_score = min(raw_score + 35, 100)
 
     # Scam and executable extension boosts
     scam_count = features.get("num_scam_keywords", 0)

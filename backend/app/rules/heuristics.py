@@ -178,12 +178,15 @@ def _rule_url_mutation(url: str, features: Dict) -> RuleResult:
     has_homoglyph_puny = features.get("has_punycode", 0) == 1
     has_hyphen_brand = (features.get("domain_has_hyphen", 0) == 1 and features.get("num_brand_tokens", 0) > 0)
     has_encoded_path = (features.get("has_encoded_chars", 0) == 1 and features.get("num_auth_keywords", 0) >= 1)
+    has_brand_mutation = features.get("brand_domain_mutation", 0) == 1
+    has_digit_brand = (features.get("domain_has_digit", 0) == 1 and features.get("num_brand_tokens", 0) > 0)
     
-    triggered = has_homoglyph_puny or has_hyphen_brand or has_encoded_path
+    triggered = has_homoglyph_puny or has_hyphen_brand or has_encoded_path or has_brand_mutation or has_digit_brand
+    severity = "HIGH" if (has_brand_mutation or has_homoglyph_puny) else "MEDIUM"
     return RuleResult(
         name="URL Mutation",
-        severity="MEDIUM",
-        description="URL exhibits structural or character mutation patterns common in domain spoofing and filter evasion.",
+        severity=severity,
+        description="URL exhibits brand typosquatting, character addition, or domain mutation patterns common in spoofing attacks.",
         triggered=triggered,
     )
 

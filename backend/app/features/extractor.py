@@ -240,6 +240,11 @@ def extract_features(url: str) -> Dict[str, Any]:
     )
     features["brand_impersonation_indicator"] = 1 if (brand_in_rest and not brand_in_domain) else 0
 
+    # Brand domain mutation / typosquatting: domain contains brand keyword but is not exact brand domain (e.g. google13, paypal123)
+    exact_brand_match = (ext.domain or "").lower() in BRAND_KEYWORDS
+    brand_in_domain_label = any(b in (ext.domain or "").lower() for b in BRAND_KEYWORDS)
+    features["brand_domain_mutation"] = 1 if (brand_in_domain_label and not exact_brand_match) else 0
+
     # Suspicious domain patterns
     features["domain_has_hyphen"] = 1 if "-" in (ext.domain or "") else 0
     features["domain_has_digit"] = 1 if any(c.isdigit() for c in (ext.domain or "")) else 0
