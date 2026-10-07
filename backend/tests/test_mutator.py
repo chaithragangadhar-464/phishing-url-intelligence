@@ -102,10 +102,18 @@ class TestMutatorService:
         first = variants[0]
         required_fields = [
             "url", "operator", "risk_score", "ml_probability",
-            "classification", "delta_score", "delta_ml", "ml_dropped", "still_flagged"
+            "classification", "delta_score", "delta_ml", "ml_dropped", "still_flagged", "risk_factors"
         ]
         for f in required_fields:
             assert f in first, f"Missing variant field: {f}"
+
+    def test_variant_has_mutation_risk_factor(self):
+        result = generate_mutations("https://paypal-login.verify-account.example.com/signin")
+        variants = result["variants"]
+        assert len(variants) > 0
+        for v in variants:
+            rf_names = [rf["name"] for rf in v["risk_factors"]]
+            assert any("URL Mutation" in name for name in rf_names), f"URL Mutation missing from variant risk_factors: {rf_names}"
 
     def test_ip_host_input_only_path_operators(self):
         result = generate_mutations("http://192.168.10.5/secure/login.php")

@@ -51,7 +51,7 @@ def validate_url(url: str) -> str:
     return url
 
 
-def analyze_url(raw_url: str) -> Dict[str, Any]:
+def analyze_url(raw_url: str, mutation_operator: str = None) -> Dict[str, Any]:
     """
     Full analysis pipeline for a submitted URL.
     Returns structured analysis result.
@@ -113,6 +113,38 @@ def analyze_url(raw_url: str) -> Dict[str, Any]:
                     "severity": rule["severity"],
                     "description": rule["description"],
                 })
+
+    if mutation_operator:
+        op_names = {
+            "homoglyph": "Homoglyph Domain Substitution",
+            "typosquat": "Typosquatting Domain Mutation",
+            "hyphen": "Hyphen-Inserted Domain Mutation",
+            "subdomain_padding": "Subdomain Padding Mutation",
+            "keyword_insert": "Path Keyword Insertion Mutation",
+            "percent_encode": "Percent-Encoding Path Mutation"
+        }
+        op_label = op_names.get(mutation_operator, f"{mutation_operator}")
+        op_descriptions = {
+            "homoglyph": "URL domain uses visually similar character substitutions (homoglyph attack).",
+            "typosquat": "URL domain contains typosquatting character alterations (swapped, dropped, or duplicated letters).",
+            "hyphen": "URL domain contains inserted hyphens to mimic legitimate domains.",
+            "subdomain_padding": "URL uses padded subdomains (e.g. secure, login) to disguise the host.",
+            "keyword_insert": "URL path contains inserted authentication or verification keywords.",
+            "percent_encode": "URL path uses percent-encoding obfuscation to conceal characters."
+        }
+        desc = op_descriptions.get(mutation_operator, f"URL was created using the '{mutation_operator}' mutation operator.")
+        
+        mutation_factor = {
+            "name": f"URL Mutation ({op_label})",
+            "severity": "HIGH" if mutation_operator in ("homoglyph", "typosquat") else "MEDIUM",
+            "description": desc
+        }
+        # Avoid duplicate if already present
+        if not any(rf["name"] == mutation_factor["name"] or rf["name"] == "URL Mutation" for rf in risk_factors):
+            if mutation_factor["severity"] == "HIGH":
+                risk_factors.insert(0, mutation_factor)
+            else:
+                risk_factors.append(mutation_factor)
 
     # 10. Selected features for display (readable subset)
     display_features = {

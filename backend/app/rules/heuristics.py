@@ -174,6 +174,20 @@ def _rule_domain_has_hyphen(url: str, features: Dict) -> RuleResult:
     )
 
 
+def _rule_url_mutation(url: str, features: Dict) -> RuleResult:
+    has_homoglyph_puny = features.get("has_punycode", 0) == 1
+    has_hyphen_brand = (features.get("domain_has_hyphen", 0) == 1 and features.get("num_brand_tokens", 0) > 0)
+    has_encoded_path = (features.get("has_encoded_chars", 0) == 1 and features.get("num_auth_keywords", 0) >= 1)
+    
+    triggered = has_homoglyph_puny or has_hyphen_brand or has_encoded_path
+    return RuleResult(
+        name="URL Mutation",
+        severity="MEDIUM",
+        description="URL exhibits structural or character mutation patterns common in domain spoofing and filter evasion.",
+        triggered=triggered,
+    )
+
+
 def _rule_non_standard_port(url: str, features: Dict) -> RuleResult:
     port = features.get("port_number", 0)
     triggered = port not in (0, 80, 443, 8080, 8443) and port > 0
@@ -248,6 +262,7 @@ ALL_RULES = [
     _rule_encoded_chars,
     _rule_double_slash,
     _rule_domain_has_hyphen,
+    _rule_url_mutation,
 ]
 
 

@@ -287,7 +287,7 @@ def generate_mutations(url: str) -> Dict[str, Any]:
     still_flagged_after_ml_drop_count = 0
     
     for v_url, op in unique_variants:
-        res = analyze_url(v_url)
+        res = analyze_url(v_url, mutation_operator=op)
         if "error" in res:
             continue
             
@@ -316,7 +316,8 @@ def generate_mutations(url: str) -> Dict[str, Any]:
             "delta_score": delta_score,
             "delta_ml": delta_ml,
             "ml_dropped": ml_dropped,
-            "still_flagged": still_flagged
+            "still_flagged": still_flagged,
+            "risk_factors": res.get("risk_factors", [])
         })
         
     # Check if model is loaded (from analyze_url output or model_loader)
