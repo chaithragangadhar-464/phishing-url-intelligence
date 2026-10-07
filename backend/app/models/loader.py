@@ -17,8 +17,23 @@ _model = None
 _feature_names = None
 _model_loaded = False
 
-MODEL_PATH = Path(__file__).resolve().parent.parent.parent.parent / "models" / "phishing_model.joblib"
-META_PATH  = Path(__file__).resolve().parent.parent.parent.parent / "models" / "model_meta.joblib"
+# Check backend/models/ first (Railway deployment), then project-root models/ (local dev)
+_BACKEND_ROOT = Path(__file__).resolve().parent.parent.parent
+_PROJECT_ROOT = _BACKEND_ROOT.parent
+
+def _find_model_path(filename: str) -> Path:
+    """Find model file in backend/models/ or project-root models/."""
+    candidates = [
+        _BACKEND_ROOT / "models" / filename,
+        _PROJECT_ROOT / "models" / filename,
+    ]
+    for p in candidates:
+        if p.exists():
+            return p
+    return candidates[0]  # Return first as default (for error messages)
+
+MODEL_PATH = _find_model_path("phishing_model.joblib")
+META_PATH  = _find_model_path("model_meta.joblib")
 
 
 def load_model() -> bool:
