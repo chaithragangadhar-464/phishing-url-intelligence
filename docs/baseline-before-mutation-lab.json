@@ -1,0 +1,37 @@
+{
+    "health":  {
+                   "status":  "healthy",
+                   "model_loaded":  true,
+                   "version":  "1.0.0"
+               },
+    "baseline":  [
+                     {
+                         "url":  "https://paypal-login.verify-account.example.com/signin",
+                         "risk_score":  47,
+                         "classification":  "legitimate",
+                         "confidence":  0.4118,
+                         "model_used":  "XGBoost"
+                     },
+                     {
+                         "url":  "http://192.168.10.5/secure/login.php",
+                         "risk_score":  96,
+                         "classification":  "phishing",
+                         "confidence":  0.9985,
+                         "model_used":  "XGBoost"
+                     },
+                     {
+                         "url":  "https://www.google.com",
+                         "risk_score":  0,
+                         "classification":  "legitimate",
+                         "confidence":  0.0001,
+                         "model_used":  "XGBoost"
+                     },
+                     {
+                         "url":  "https://github.com",
+                         "risk_score":  2,
+                         "classification":  "legitimate",
+                         "confidence":  0.0278,
+                         "model_used":  "XGBoost"
+                     }
+                 ]
+}
